@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Text Animation</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <script src="https://threejs.org/build/three.min.js"></script>
+
+  <div id="canvas-container"></div>
+
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+    // Load the font JSON file (replace 'path/to/your/font.json' with the correct path)
+    const loader = new THREE.FontLoader();
+    loader.load('path/to/your/font.json', function (font) {
+      const textGeometry = new THREE.TextGeometry('NEW', {
+        font: font,
+        size: 20,
+        height: 5,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 1,
+        bevelSize: 1,
+        bevelSegments: 5
+      });
+
+      const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const textMesh = new THREE.Mesh(textGeometry, material);
+
+      scene.add(textMesh);
+
+      textMesh.position.set(-30, 0, -100);
+      textMesh.rotation.set(0, Math.PI * 2, 0);
+
+      const clock = new THREE.Clock();
+      const animate = function () {
+        requestAnimationFrame(animate);
+
+        const delta = clock.getDelta();
+        textMesh.rotation.y += delta;
+
+        renderer.render(scene, camera);
+      };
+
+      animate();
+    });
+
+    camera.position.z = 100;
+  </script>
+</body>
+</html>
